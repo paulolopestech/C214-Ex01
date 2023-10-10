@@ -101,6 +101,79 @@ describe('Testing showFilteredSchedule', () => {
         schedule.schedule = mockSchedule;
         const filter = {building: '1'};
         const response = schedule.showFilteredSchedule(filter);
-        expect(response).toEqual(mockSchedule);
+        expect(response).toEqual([mockSchedule[0], mockSchedule[2]]);
+    });
+
+    test('should return list of shchedules of professor Chris', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {nomeDoProfessor: 'Chris'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([mockSchedule[0]]);
+    });
+
+    test('should return empty array if teacher has not a schedule', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {nomeDoProfessor: 'Guilherme'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([]);
+    });
+
+    test('should return schedules per day', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {horarioDeAtendimento: 'Segunda'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([mockSchedule[0]]);
+    });
+
+    test('should return schedules per time', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {horarioDeAtendimento: '10:30'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([mockSchedule[0], mockSchedule[1]]);
+    });
+
+    test('should return empty array when filter domingo', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {horarioDeAtendimento: 'Domingo'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([]);
+    });
+
+    test('should return empty array when filter midnight', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {horarioDeAtendimento: '00:00'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([]);
+    });
+
+
+    test('should filter by periodo', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {periodo: 'Integral'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([mockSchedule[0], mockSchedule[2]]);
+    });
+
+    test('should return empty array when periodo not exists', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {periodo: 'p10'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([]);
+    });
+
+    test('should return empty array when filter not exists', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const filter = {colegio: 'Inatel'};
+        const response = schedule.showFilteredSchedule(filter);
+        expect(response).toEqual([]);
     });
 });
