@@ -24,8 +24,10 @@ export class Schedule {
         return 'Invalid input'
     }
 
-    showSchedule() {
+    showSchedule(paginate: number | null = null) {
+        if(!paginate)
         return this.schedule;
+        return this.schedule?.slice(0, paginate);
     }
 
     showFilteredSchedule(filter: any){
@@ -36,6 +38,33 @@ export class Schedule {
                     filteredSchedule.push(item);
                 }
             })
+            return filteredSchedule;
+        }
+
+        if(filter.nomeDoProfessor){
+            this.schedule?.forEach((item) => {
+                if(item.nomeDoProfessor.includes(filter.nomeDoProfessor)){
+                    filteredSchedule.push(item);
+                }
+            });
+            return filteredSchedule;
+        }
+
+        if(filter.horarioDeAtendimento){
+            this.schedule?.forEach((item) => {
+                if(item.horarioDeAtendimento.includes(filter.horarioDeAtendimento)){
+                    filteredSchedule.push(item);
+                }
+            });
+            return filteredSchedule;
+        }
+
+        if(filter.periodo){
+            this.schedule?.forEach((item) => {
+                if(item.periodo.includes(filter.periodo)){
+                    filteredSchedule.push(item);
+                }
+            });
             return filteredSchedule;
         }
         return filteredSchedule;
