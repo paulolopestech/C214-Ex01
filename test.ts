@@ -1,7 +1,11 @@
 import { MockServer, MockServerOffline } from "./MockServer";
 import { Schedule } from "./Schedule";
 
-const mockSchedule = [JSON.parse('{"nomeDoProfessor":"Chris","horarioDeAtendimento":"Segunda-Feira 10:30","periodo":"Integral","sala":"1","predio":["1"]}')];
+const mockSchedule = [
+    JSON.parse('{"nomeDoProfessor":"Chris","horarioDeAtendimento":"Segunda-Feira 10:30","periodo":"Integral","sala":"1","predio":["1"]}'),
+    JSON.parse('{"nomeDoProfessor":"Renzo","horarioDeAtendimento":"Terça-Feira 10:30","periodo":"Noturno","sala":"9","predio":["2"]}'),
+    JSON.parse('{"nomeDoProfessor":"Marcelo","horarioDeAtendimento":"Quarta-Feira 11:30","periodo":"Integral","sala":"3","predio":["1"]}'),
+];
 
 describe('Testing getSchedule', () => {
     test('should accept a string returned from server', async () => {
@@ -44,7 +48,7 @@ describe('Testing showSchedule', () => {
         const schedule = new Schedule(new MockServer);
         schedule.schedule = mockSchedule;
         const response = schedule.showSchedule();
-        expect(response?.length).toBe(1);
+        expect(response?.length).toBe(3);
     });
 
 
@@ -52,6 +56,27 @@ describe('Testing showSchedule', () => {
         const schedule = new Schedule(new MockServer);
         const response = schedule.showSchedule();
         expect(response).toBe(null);
+    });
+
+    test('should return a paginated list', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const response = schedule.showSchedule(1);
+        expect(response?.length).toBe(1);
+    });
+
+    test('should return the entire list when paginate is 0', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const response = schedule.showSchedule(0);
+        expect(response?.length).toBe(3);
+    });
+
+    test('should return the entire list when paginate is overflow', async () => {
+        const schedule = new Schedule(new MockServer);
+        schedule.schedule = mockSchedule;
+        const response = schedule.showSchedule(10);
+        expect(response?.length).toBe(3);
     });
 });
 
