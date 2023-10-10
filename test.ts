@@ -1,4 +1,4 @@
-import { MockServer } from "./MockServer";
+import { MockServer, MockServerOffline } from "./MockServer";
 import { Schedule } from "./Schedule";
 
 describe('Testing get server data', () => {
@@ -11,5 +11,11 @@ describe('Testing get server data', () => {
         expect(parsedServerData).toHaveProperty('periodo');
         expect(parsedServerData).toHaveProperty('sala');
         expect(parsedServerData).toHaveProperty('predio');
+    });
+
+    test('should throw error if server does not respond', async () => {
+        const schedule = new Schedule(new MockServerOffline);
+        const serverData: string = await schedule.getSchedule();
+        expect(serverData).toEqual('Error');
     });
 })
